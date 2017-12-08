@@ -4,7 +4,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <div class="right">
 	<div class="location">
-		<strong>你现在所在的位置是:</strong> <span>供应商管理页面 >> 供应商添加页面</span>
+		<strong>你现在所在的位置是:</strong> <span><a href="initProviderList.do"
+			style="color: #2179a9">供应商管理页面</a> &gt;&gt; 供应商添加页面</span>
 	</div>
 	<div class="providerAdd">
 		<form id="providerForm" enctype="multipart/form-data"

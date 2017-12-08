@@ -42,8 +42,9 @@
 					<li><a href="initBill.do">订单管理</a></li>
 					<li><a href="initProviderList.do">供应商管理</a></li>
 					<li><a href="initUserList.do">用户管理</a></li>
+					<li><a href="initRoleList.do">角色管理</a></li>
 					<li><a
-						href="${pageContext.request.contextPath }/jsp/pwdmodify.jsp">密码修改</a></li>
+						href="pwdmodify.do">密码修改</a></li>
 					<li><a
 						href="${pageContext.request.contextPath }/user/logout.html">退出系统</a></li>
 				</ul>

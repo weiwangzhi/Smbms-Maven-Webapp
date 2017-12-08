@@ -44,6 +44,8 @@ public class UserController {
 	 */
 	@RequestMapping("/login.do")
 	public String login(SmbmsUser smbmsUser, HttpSession httpServletRequest, Map<String, Object> map) {
+		map.remove("error");
+		httpServletRequest.removeAttribute("userSession");
 		// 登录
 		smbmsUser = smbmsUserService.login(smbmsUser);
 		if (smbmsUser != null) {
@@ -64,6 +66,48 @@ public class UserController {
 	public String logout(HttpSession session) {
 		session.removeAttribute("userSession");
 		return "jsp/login";
+	}
+
+	/**
+	 * 跳转到修改密码页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/pwdmodify.do")
+	public String pwdmodify() {
+		return "jsp/pwdmodify";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/updatePwd.do")
+	public String updatePwd(@RequestParam("oldpassword") String oldpassword, HttpSession session,
+			Map<String, Object> map) {
+		SmbmsUser smbmsUser = (SmbmsUser) session.getAttribute("userSession");// 得到登录的用户信息
+		if (smbmsUser != null) {
+			smbmsUser.setUserPassword(oldpassword);
+			if (smbmsUserService.login(smbmsUser) != null) {
+				map.put("result", "true");// 旧密码正确
+			} else {
+				map.put("result", "false");// 旧密码错误
+			}
+		} else if (oldpassword.isEmpty()) {
+			map.put("result", "error");// 旧密码为空
+		} else {
+			map.put("result", "sessionerror");// 会话过期
+		}
+		return JSONArray.toJSONString(map);
+	}
+
+	@RequestMapping(value = "/pwdmodifysave.do")
+	public String pwdmodifysave(@RequestParam("newpassword") String newpassword, HttpSession session,
+			Map<String, Object> map) {
+		SmbmsUser smbmsUser = (SmbmsUser) session.getAttribute("userSession");
+		smbmsUser.setUserPassword(newpassword);
+		int num = smbmsUserService.updateSmbmsUser(smbmsUser);// 执行修改密码
+		if (num > 0) {
+			return "redirect:/login.do";
+		}
+		return "jsp/pwdmodify";
 	}
 
 	// 每页记录数
@@ -165,14 +209,6 @@ public class UserController {
 		return variable;
 	}
 
-	@RequestMapping(value = "/userAdd.do", method = RequestMethod.POST)
-	public String userAdd(String method, SmbmsUser smbmsUser, HttpServletRequest request, HttpSession session,
-			Map<String, Object> map, @RequestParam(value = "attachs", required = false) MultipartFile[] attachs) {
-		System.out.println("Birthday:" + smbmsUser.getBirthday());
-		return "";
-
-	}
-
 	/**
 	 * 添加、修改用户
 	 * 
@@ -186,68 +222,68 @@ public class UserController {
 	public String userAddOrModify(String method, SmbmsUser smbmsUser, HttpServletRequest request, HttpSession session,
 			Map<String, Object> map, @RequestParam(value = "attachs", required = false) MultipartFile[] attachs) {
 		String result = "redirect:/initUserList.do";
-		if ("add".equals(method)) {
-			System.out.println("Birthday:" + smbmsUser.getBirthday());
-			String idPicPath = null;
-			String workPicPath = null;
-			String errorInfo = null;
-			boolean flag = true;
-			String filePath = "statics" + File.separator + "uploadfiles";
-			String path = request.getSession().getServletContext().getRealPath(filePath);
-			for (int i = 0; i < attachs.length; i++) {
-				MultipartFile pic = attachs[i];
-				if (!pic.isEmpty()) {
+		String idPicPath = null;
+		String workPicPath = null;
+		String errorInfo = null;
+		boolean flag = true;
+		String filePath = "statics" + File.separator + "uploadfiles";
+		String path = request.getSession().getServletContext().getRealPath(filePath);
+		for (int i = 0; i < attachs.length; i++) {
+			MultipartFile pic = attachs[i];
+			if (!pic.isEmpty()) {
+				if (i == 0) {
+					errorInfo = "uploadFileError";
+				} else if (i == 1) {
+					errorInfo = "uploadWpError";
+				}
+				String oldFileName = pic.getOriginalFilename();// 原文件名
+				String prefix = FilenameUtils.getExtension(oldFileName);// 原文件后缀
+				int filesize = 500000;
+				if (pic.getSize() > filesize) {// 上传大小不得超过 500k
+					request.setAttribute(errorInfo, " * 上传大小不得超过 500k");
+					flag = false;
+				} else if (prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png")
+						|| prefix.equalsIgnoreCase("jpeg") || prefix.equalsIgnoreCase("pneg")) {// 上传图片格式不正确
+					String fileName = System.currentTimeMillis() + new Random().nextInt(10000000) + "." + prefix;
+					File targetFile = new File(path, fileName);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					try {
+						pic.transferTo(targetFile);
+					} catch (Exception e) {
+						e.printStackTrace();
+						request.setAttribute(errorInfo, " * 上传失败！");
+						flag = false;
+					}
 					if (i == 0) {
-						errorInfo = "uploadFileError";
+						idPicPath = filePath + File.separator + fileName;
 					} else if (i == 1) {
-						errorInfo = "uploadWpError";
+						workPicPath = filePath + File.separator + fileName;
 					}
-					String oldFileName = pic.getOriginalFilename();// 原文件名
-					String prefix = FilenameUtils.getExtension(oldFileName);// 原文件后缀
-					int filesize = 500000;
-					if (pic.getSize() > filesize) {// 上传大小不得超过 500k
-						request.setAttribute(errorInfo, " * 上传大小不得超过 500k");
-						flag = false;
-					} else if (prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png")
-							|| prefix.equalsIgnoreCase("jpeg") || prefix.equalsIgnoreCase("pneg")) {// 上传图片格式不正确
-						String fileName = System.currentTimeMillis() + new Random().nextInt(10000000) + "." + prefix;
-						File targetFile = new File(path, fileName);
-						if (!targetFile.exists()) {
-							targetFile.mkdirs();
-						}
-						// 保存
-						try {
-							pic.transferTo(targetFile);
-						} catch (Exception e) {
-							e.printStackTrace();
-							request.setAttribute(errorInfo, " * 上传失败！");
-							flag = false;
-						}
-						if (i == 0) {
-							idPicPath = filePath + File.separator + fileName;
-						} else if (i == 1) {
-							workPicPath = filePath + File.separator + fileName;
-						}
 
-					} else {
-						request.setAttribute(errorInfo, " * 上传图片格式不正确");
-						flag = false;
-					}
+				} else {
+					request.setAttribute(errorInfo, " * 上传图片格式不正确");
+					flag = false;
 				}
 			}
-			if (flag) {
-				smbmsUser.setCreatedBy(((SmbmsUser) session.getAttribute("userSession")).getId());
-				smbmsUser.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				smbmsUser.setIdPic(idPicPath);
-				smbmsUser.setWorkPic(workPicPath);
-				if (smbmsUserService.addSmbmsUser(smbmsUser) > 0) {
-					result = "redirect:/initUserList.do";
-				}
+		}
+		if ("add".equals(method) && flag) {
+			smbmsUser.setCreatedBy(((SmbmsUser) session.getAttribute("userSession")).getId());
+			smbmsUser.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			smbmsUser.setIdPic(idPicPath);
+			smbmsUser.setWorkPic(workPicPath);
+			if (smbmsUserService.addSmbmsUser(smbmsUser) > 0) {
+				result = "redirect:/initUserList.do";
+			} else {
+				result = "jsp/useradd";
 			}
-			result = "jsp/useradd";
-		} else if ("modify".equals(method)) {
+		} else if ("modify".equals(method) && flag) {
 			smbmsUser.setModifyBy(((SmbmsUser) session.getAttribute("userSession")).getId());
 			smbmsUser.setModifyDate(new Timestamp(System.currentTimeMillis()));
+			smbmsUser.setIdPic(idPicPath);
+			smbmsUser.setWorkPic(workPicPath);
 			int num = smbmsUserService.updateSmbmsUser(smbmsUser);
 			if (num > 0) {
 				result = "redirect:/initUserList.do";

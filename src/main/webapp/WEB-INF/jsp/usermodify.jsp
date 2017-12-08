@@ -3,13 +3,14 @@
 <%@include file="./common/head.jsp"%>
 <div class="right">
 	<div class="location">
-		<strong>你现在所在的位置是:</strong> <span>用户管理页面 >> 用户修改页面</span>
+		<strong>你现在所在的位置是:</strong> <span><a href="initUserList.do"
+			style="color: #2179a9">用户管理页面</a> &gt;&gt; 用户修改页面</span>
 	</div>
 	<div class="providerAdd">
 		<form id="userForm" name="userForm" method="post"
-			action="userAddOrModify.do">
-			<input type="hidden" name="method" value="modify">
-			<input type="hidden" name="id" value="${user.id }" />
+			action="userAddOrModify.do" enctype="multipart/form-data">
+			<input type="hidden" name="method" value="modify"> <input
+				type="hidden" name="id" value="${user.id }" />
 			<div>
 				<label for="userName">用户名称：</label> <input type="text"
 					name="userName" id="userName" value="${user.userName }"> <font
@@ -49,6 +50,16 @@
 				<!-- 列出所有的角色分类 -->
 				<input type="hidden" value="${user.userRole }" id="rid" /> <select
 					name="userRole" id="userRole"></select> <font color="red"></font>
+			</div>
+			<div>
+				<input type="hidden" id="errorinfo" value="${uploadFileError}" /> <label
+					for="a_idPicPath">证件照：</label> <input type="file" name="attachs"
+					id="a_idPicPath" /> <font color="red"></font>
+			</div>
+			<div>
+				<input type="hidden" id="errorinfo_wp" value="${uploadWpError}" />
+				<label for="a_workPicPath">工作证照片：</label> <input type="file"
+					name="attachs" id="a_workPicPath" /> <font color="red"></font>
 			</div>
 			<div class="providerAddBtn">
 				<input type="button" name="save" id="save" value="保存" /> <input

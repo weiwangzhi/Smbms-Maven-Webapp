@@ -20,8 +20,7 @@
 		</p>
 		<p>
 			<strong>出生日期：</strong><span><fmt:formatDate type="date"
-					value="${user.birthday}" dateStyle="default" />
-				<%-- ${user.birthday } --%></span>
+					value="${user.birthday}" dateStyle="default" /> <%-- ${user.birthday } --%></span>
 		</p>
 		<p>
 			<strong>用户电话：</strong><span>${user.phone }</span>
@@ -31,6 +30,12 @@
 		</p>
 		<p>
 			<strong>用户角色：</strong><span>${user.roleName}</span>
+		</p>
+		<p>
+			<strong>证件照：</strong><span><img src="${user.idPic }"></span>
+		</p>
+		<p>
+			<strong>工作证照片：</strong><span><img src="${user.workPic }"></span>
 		</p>
 		<div class="providerAddBtn">
 			<input type="button" id="back" name="back" value="返回">

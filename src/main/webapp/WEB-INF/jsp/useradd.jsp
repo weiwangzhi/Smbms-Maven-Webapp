@@ -4,31 +4,32 @@
 
 <div class="right">
 	<div class="location">
-		<strong>你现在所在的位置是:</strong> <span>用户管理页面 >> 用户添加页面</span>
+		<strong>你现在所在的位置是:</strong> <span><a href="initUserList.do"
+			style="color: #2179a9">用户管理页面</a> &gt;&gt; 用户添加页面</span>
 	</div>
 	<div class="providerAdd">
-		<form id="userForm" name="userForm" method="post" action="userAdd.do"
-			enctype="multipart/form-data">
-			<input type="hidden" name="method" value="add">
+		<form id="userForm" name="userForm" method="post"
+			action="userAddOrModify.do" enctype="multipart/form-data">
+			<input name="method" value="add" type="hidden" />
 			<!--div的class 为error是验证错误，ok是验证成功-->
 			<div>
 				<label for="userCode">用户编码：</label> <input type="text"
-					name="usercode" id="userCode" value="">
+					name="userCode" id="userCode" value="">
 				<!-- 放置提示信息 -->
 				<font color="red"></font>
 			</div>
 			<div>
 				<label for="userName">用户名称：</label> <input type="text"
-					name="username" id="userName" value=""> <font color="red"></font>
+					name="userName" id="userName" value=""> <font color="red"></font>
 			</div>
 			<div>
 				<label for="userPassword">用户密码：</label> <input type="password"
-					name="userpassword" id="userPassword" value=""> <font
+					id="userPassword" value=""> <font
 					color="red"></font>
 			</div>
 			<div>
 				<label for="ruserPassword">确认密码：</label> <input type="password"
-					name="ruserPassword" id="ruserPassword" value=""> <font
+					name="userPassword" id="ruserPassword" value=""> <font
 					color="red"></font>
 			</div>
 			<div>
@@ -38,9 +39,10 @@
 				</select>
 			</div>
 			<div>
+				<!--  -->
 				<label for="birthday">出生日期：</label> <input type="text" Class="Wdate"
-					id="birthday" name="birthday" readonly="readonly"
-					onclick="WdatePicker();"> <font color="red"></font>
+					id="birthday" name="birthday" onclick="WdatePicker();"
+					readonly="readonly"> <font color="red"></font>
 			</div>
 			<div>
 				<label for="phone">用户电话：</label> <input type="text" name="phone"
@@ -54,7 +56,7 @@
 				<label>用户角色：</label>
 				<!-- 列出所有的角色分类 -->
 				<!-- <select name="userRole" id="userRole"></select> -->
-				<select name="userrole" id="userRole">
+				<select name="userRole" id="userRole">
 				</select> <font color="red"></font>
 			</div>
 			<div>
@@ -63,8 +65,8 @@
 					id="a_idPicPath" /> <font color="red"></font>
 			</div>
 			<div>
-				<input type="hidden" id="errorinfo_wp" value="${uploadWpError}" /> <label
-					for="a_workPicPath">工作证照片：</label> <input type="file"
+				<input type="hidden" id="errorinfo_wp" value="${uploadWpError}" />
+				<label for="a_workPicPath">工作证照片：</label> <input type="file"
 					name="attachs" id="a_workPicPath" /> <font color="red"></font>
 			</div>
 			<div class="providerAddBtn">

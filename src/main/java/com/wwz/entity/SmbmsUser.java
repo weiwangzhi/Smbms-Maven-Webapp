@@ -5,6 +5,10 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * 
  * @author pain
@@ -24,6 +28,8 @@ public class SmbmsUser implements java.io.Serializable {
 	@NotNull
 	private String userPassword;
 	private Integer gender;
+	@JSONField(format = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 	private Integer age;
 	private String phone;

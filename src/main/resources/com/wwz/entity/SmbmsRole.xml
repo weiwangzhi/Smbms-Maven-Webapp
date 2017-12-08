@@ -4,7 +4,70 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.wwz.dao.SmbmsRoleDao">
+<!-- 列表 -->
 	<select id="getRoles" resultType="SmbmsRole">
 		SELECT * FROM `smbms_role`
+	</select>
+	<!-- 根据id删除角色信息 -->
+	<delete id="deleteRole" parameterType="Long">
+		DELETE
+		FROM
+		`smbms`.`smbms_role`
+		WHERE `id` = #{id}
+	</delete>
+	<!-- 修改角色信息 -->
+	<update id="updateRole" parameterType="SmbmsRole">
+		UPDATE
+		`smbms`.`smbms_role`
+		<set>
+			<if test="roleCode != null">roleCode = #{roleCode},</if>
+			<if test="roleName != null">roleName = #{roleName},</if>
+			<if test="createdBy != null">createdBy = #{createdBy},</if>
+			<if test="creationDate != null">creationDate = #{creationDate},</if>
+			<if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+			<if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+		</set>
+		WHERE `id` = #{id}
+	</update>
+	<!-- 添加角色 -->
+	<insert id="addRole" parameterType="SmbmsRole">
+		INSERT INTO `smbms`.`smbms_role` (
+		<trim suffixOverrides=",">
+			<if test="roleCode != null">`roleCode`,</if>
+			<if test="roleName != null">`roleName`,</if>
+			<if test="createdBy != null">`createdBy`,</if>
+			<if test="creationDate != null">`creationDate`,</if>
+			<if test="modifyBy != null">`modifyBy`,</if>
+			<if test="modifyDate != null">`modifyDate`,</if>
+		</trim>
+		)VALUES
+		(
+		<trim suffixOverrides=",">
+			<if test="id != null">default,</if>
+			<if test="roleCode != null">#{roleCode},</if>
+			<if test="roleName != null">#{roleName},</if>
+			<if test="createdBy != null">#{createdBy},</if>
+			<if test="creationDate != null">#{creationDate},</if>
+			<if test="modifyBy != null">#{modifyBy},</if>
+			<if test="modifyDate != null">#{modifyDate},</if>
+		</trim>
+		)
+	</insert>
+	<!-- 总记录数 -->
+	<select id="getRoleCount" resultType="int">
+		SELECT count(1) FROM `smbms_role`
+	</select>
+	<!-- 根据id查看角色信息 -->
+	<select id="getRoleById" resultType="SmbmsRole"
+		parameterType="Long">
+		SELECT * FROM `smbms_role` WHERE id=#{id}
+	</select>
+	<!-- 根据roleCode查找角色-->
+	<select id="getRoleByRoleCode" resultType="int">
+		SELECT COUNT(1) FROM `smbms_role` WHERE roleCode=#{roleCode}
+	</select>
+	<!-- 根据roleCode查找角色-->
+	<select id="getRoleByRoleName" resultType="int">
+		SELECT COUNT(1) FROM `smbms_role` WHERE roleName=#{roleName}
 	</select>
 </mapper>

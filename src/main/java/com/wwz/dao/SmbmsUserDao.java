@@ -67,12 +67,16 @@ public interface SmbmsUserDao {
 	 * @return
 	 */
 	public int deleteSmbmsUser(Long id);
-	
+
 	/**
 	 * 通过用户编码查询
+	 * 
 	 * @param userCode
 	 * @return
 	 */
 	public int getSmbmsUserByUserCode(String userCode);
+
+	public int updatePwd(@Param("userName") String userName, @Param("oldPwd") String oldPwd,
+			@Param("newPwd") String newPwd);
 
 }

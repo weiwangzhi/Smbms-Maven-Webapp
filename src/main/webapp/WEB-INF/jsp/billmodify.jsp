@@ -5,7 +5,8 @@
 <div class="right">
         <div class="location">
             <strong>你现在所在的位置是:</strong>
-            <span>订单管理页面 >> 订单添加页面</span>
+            <span><a href="initBill.do"
+			style="color: #2179a9">订单管理页面</a> &gt;&gt; 订单添加页面</span>
         </div>
         <div class="providerAdd">
           <form id="billForm" name="billForm" method="post" action="billsave.do">

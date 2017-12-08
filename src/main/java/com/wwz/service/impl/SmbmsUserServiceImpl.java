@@ -54,7 +54,7 @@ public class SmbmsUserServiceImpl implements SmbmsUserService {
 		SmbmsUser smbmsUser = new SmbmsUser();
 		if (smbmsUserDao.getSmbmsUserByUserCode(userCode) > 0) {
 			smbmsUser.setUserCode("exist");
-		} else {
+		}else {
 			smbmsUser.setUserCode("");
 		}
 		return smbmsUser;
