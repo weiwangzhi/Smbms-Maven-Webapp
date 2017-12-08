@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wwz.dao.SmbmsUserDao">
+	<!-- 登录 -->
+	<select id="login" resultType="SmbmsUser" parameterType="SmbmsUser">
+		SELECT *
+		FROM `smbms_user` WHERE `userCode` = #{userCode} AND `userPassword` =
+		#{userPassword}
+	</select>
+	<!-- 分页 -->
+	<select id="getUsersByPage" resultType="SmbmsUser">
+		SELECT u.*,YEAR(NOW())-YEAR(u.`birthday`) age,r.`roleName` FROM
+		`smbms_user` u INNER JOIN `smbms_role` r
+		ON u.`userRole` = r.`id`
+		<where>
+			<if test="userName != null and userName != ''">and u.userName like CONCAT ('%',#{userName},'%')</if>
+			<if test="userRole != null and userRole != 0">and u.userRole = #{userRole}</if>
+		</where>
+		limit #{pageIndex},#{pageSize}
+	</select>
+	<!-- 总记录数 -->
+	<select id="userCount" resultType="int">
+		SELECT count(1) FROM `smbms_user` u INNER JOIN `smbms_role` r
+		ON
+		u.`userRole` = r.`id`
+		<where>
+			<if test="userName != null and userName != ''">and u.userName like CONCAT ('%',#{userName},'%')</if>
+			<if test="userRole != null and userRole != 0">and u.userRole = #{userRole}</if>
+		</where>
+	</select>
+	<!-- 添加用户 -->
+	<insert id="addSmbmsUser" parameterType="SmbmsUser">
+		INSERT INTO `smbms`.`smbms_user` (
+		<trim suffixOverrides=",">
+			<if test="userCode != null">`userCode`,</if>
+			<if test="userName != null">`userName`,</if>
+			<if test="userPassword != null">`userPassword`,</if>
+			<if test="gender != null">`gender`,</if>
+			<if test="birthday != null">`birthday`,</if>
+			<if test="phone != null">`phone`,</if>
+			<if test="address != null">`address`,</if>
+			<if test="userRole != null">`userRole`,</if>
+			<if test="createdBy != null">`createdBy`,</if>
+			<if test="creationDate != null">`creationDate`,</if>
+			<if test="modifyBy != null">`modifyBy`,</if>
+			<if test="modifyDate != null">`modifyDate`,</if>
+			<if test="idPic != null">`idPic`,</if>
+			<if test="workPic != null">`workPic`,</if>
+		</trim>
+		)VALUES
+		(
+		<trim suffixOverrides=",">
+			<if test="id != null">default,</if>
+			<if test="userCode != null">#{userCode},</if>
+			<if test="userName != null">#{userName},</if>
+			<if test="userPassword != null">#{userPassword},</if>
+			<if test="gender != null">#{gender},</if>
+			<if test="birthday != null">#{birthday},</if>
+			<if test="phone != null">#{phone},</if>
+			<if test="address != null">#{address},</if>
+			<if test="userRole != null">#{userRole},</if>
+			<if test="createdBy != null">#{createdBy},</if>
+			<if test="creationDate != null">#{creationDate},</if>
+			<if test="modifyBy != null">#{modifyBy},</if>
+			<if test="modifyDate != null">#{modifyDate},</if>
+			<if test="idPic != null">#{idPic},</if>
+			<if test="workPic != null">#{workPic},</if>
+		</trim>
+		)
+	</insert>
+	<!-- 根据id查看用户信息 -->
+	<select id="getSmbmsUserById" resultType="SmbmsUser"
+		parameterType="Long">
+		SELECT u.*,r.`roleName` FROM `smbms_user` u INNER JOIN
+		`smbms_role` r ON u.`userRole`=r.`id` WHERE u.id=#{id}
+	</select>
+	<!-- 修改用户信息 -->
+	<update id="updateSmbmsUser" parameterType="SmbmsUser">
+		UPDATE
+		`smbms`.`smbms_user`
+		<set>
+			<if test="userCode != null">userCode = #{userCode},</if>
+			<if test="userName != null">userName = #{userName},</if>
+			<if test="userPassword != null">userPassword = #{userPassword},</if>
+			<if test="gender != null">gender = #{gender},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="userRole != null">userRole = #{userRole},</if>
+			<if test="createdBy != null">createdBy = #{createdBy},</if>
+			<if test="creationDate != null">creationDate = #{creationDate},</if>
+			<if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+			<if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+			<if test="idPic != null">idPic = #{idPic},</if>
+			<if test="workPic != null">workPic = #{workPic},</if>
+		</set>
+		WHERE `id` = #{id}
+	</update>
+	<!-- 根据id删除用户信息 -->
+	<delete id="deleteSmbmsUser" parameterType="Long">
+		DELETE
+		FROM
+		`smbms`.`smbms_user`
+		WHERE `id` = #{id}
+	</delete>
+	<!-- 根据userCode查找用户-->
+	<select id="getSmbmsUserByUserCode" resultType="int">
+		SELECT COUNT(1) FROM `smbms_user` u INNER JOIN
+		`smbms_role` r ON u.`userRole`=r.`id` WHERE u.userCode=#{userCode}
+	</select>
+</mapper>

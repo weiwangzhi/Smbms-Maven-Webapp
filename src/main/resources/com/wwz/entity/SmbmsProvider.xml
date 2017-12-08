@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wwz.dao.SmbmsProviderDao">
+	<!-- 分页 -->
+	<select id="getProviderByPage" resultType="SmbmsProvider">
+		SELECT * FROM `smbms_provider` p
+		<where>
+			<if test="proCode != null and proCode != ''">and p.`proCode` LIKE CONCAT ('%',#{proCode},'%')</if>
+			<if test="proName != null and proName != ''">and p.`proName` LIKE CONCAT ('%',#{proName},'%')</if>
+		</where>
+		limit #{pageIndex},#{pageSize}
+	</select>
+	<!-- 总记录数 -->
+	<select id="providerCount" resultType="int">
+		SELECT COUNT(1) FROM `smbms_provider` p
+		<where>
+			<if test="proCode != null and proCode != ''">and p.`proCode` LIKE CONCAT ('%',#{proCode},'%')</if>
+			<if test="proName != null and proName != ''">and p.`proName` LIKE CONCAT ('%',#{proName},'%')</if>
+		</where>
+	</select>
+	<!-- 根据id查看供应商 -->
+	<select id="getProviderById" resultType="SmbmsProvider"
+		parameterType="Long">
+		SELECT * FROM `smbms_provider` p where p.id = #{id}
+	</select>
+	<!-- 添加供应商 -->
+	<insert id="addProvider" parameterType="SmbmsProvider">
+		INSERT INTO `smbms`.`smbms_provider` (
+		<trim suffixOverrides=",">
+			<if test="proCode != null">`proCode`,</if>
+			<if test="proName != null">`proName`,</if>
+			<if test="proDesc != null"> `proDesc`,</if>
+			<if test="proContact != null"> `proContact`,</if>
+			<if test="proPhone != null"> `proPhone`,</if>
+			<if test="proAddress != null"> `proAddress`,</if>
+			<if test="proFax != null"> `proFax`,</if>
+			<if test="createdBy != null"> `createdBy`,</if>
+			<if test="creationDate != null"> `creationDate`,</if>
+			<if test="modifyDate != null"> `modifyDate`,</if>
+			<if test="modifyBy != null"> `modifyBy`,</if>
+			<if test="proYyPhoto != null"> `proYyPhoto`,</if>
+			<if test="proJgPhotos != null"> `proJgPhotos`,</if>
+		</trim>
+		)
+		VALUES (
+		<trim suffixOverrides=",">
+			<if test="proCode != null">#{proCode},</if>
+			<if test="proName != null">#{proName},</if>
+			<if test="proDesc != null"> #{proDesc},</if>
+			<if test="proContact != null"> #{proContact},</if>
+			<if test="proPhone != null"> #{proPhone},</if>
+			<if test="proAddress != null"> #{proAddress},</if>
+			<if test="proFax != null"> #{proFax},</if>
+			<if test="createdBy != null"> #{createdBy},</if>
+			<if test="creationDate != null"> #{creationDate},</if>
+			<if test="modifyDate != null"> #{modifyDate},</if>
+			<if test="modifyBy != null"> #{modifyBy},</if>
+			<if test="proYyPhoto != null"> #{proYyPhoto},</if>
+			<if test="proJgPhotos != null"> #{proJgPhotos},</if>
+		</trim>
+		)
+	</insert>
+	<!-- 修改供应商信息 -->
+	<update id="updateProviderById" parameterType="SmbmsProvider">
+		UPDATE
+		`smbms`.`smbms_provider`
+		<set>
+			<if test="proCode != null">proCode = #{proCode},</if>
+			<if test="proName != null">proName = #{proName},</if>
+			<if test="proDesc != null">proDesc = #{proDesc},</if>
+			<if test="proContact != null">proContact = #{proContact},</if>
+			<if test="proPhone != null">proPhone = #{proPhone},</if>
+			<if test="proAddress != null">proAddress = #{proAddress},</if>
+			<if test="proFax != null">proFax = #{proFax},</if>
+			<if test="createdBy != null">createdBy = #{createdBy},</if>
+			<if test="creationDate != null">creationDate = #{creationDate},</if>
+			<if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+			<if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+			<if test="proYyPhoto != null">proYyPhoto = #{proYyPhoto},</if>
+			<if test="proJgPhotos != null">proJgPhotos = #{proJgPhotos}</if>
+		</set>
+		WHERE `id` = #{id}
+	</update>
+	<!-- 根据id删除供应商信息 -->
+	<delete id="deleteProviderById" parameterType="Long">
+		DELETE
+		FROM
+		`smbms`.`smbms_provider`
+		WHERE `id` = #{id}
+	</delete>
+	<!-- 所有 -->
+	<select id="getAllProvider" resultType="SmbmsProvider">
+		SELECT * FROM `smbms_provider`
+	</select>
+</mapper>
